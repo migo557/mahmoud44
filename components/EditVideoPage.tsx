@@ -135,6 +135,7 @@ interface EditVideoPageProps {
       numberOfVideos: number;
       quality: 'fast' | 'quality';
       duration: 'short' | 'medium' | 'long';
+      aspectRatio: '16:9' | '9:16' | '1:1';
     },
   ) => void;
   onCancel: () => void;
@@ -156,13 +157,19 @@ export const EditVideoPage: React.FC<EditVideoPageProps> = ({
   const [duration, setDuration] = useState<'short' | 'medium' | 'long'>(
     'medium',
   );
+  const [aspectRatio, setAspectRatio] = useState<'16:9' | '9:16' | '1:1'>(
+    '16:9',
+  );
 
   const handleSave = () => {
     let finalDescription = video.description;
     if (isMaskActive && editPrompt.trim() !== '') {
       finalDescription = `${video.description}\n\nIn the highlighted area, please ${editPrompt}.`;
     }
-    onSave({...video, description: finalDescription}, {numberOfVideos, quality, duration});
+    onSave(
+      {...video, description: finalDescription},
+      {numberOfVideos, quality, duration, aspectRatio},
+    );
   };
 
   const incrementVideos = () => setNumberOfVideos((v) => Math.min(v + 1, 4));
@@ -223,7 +230,7 @@ export const EditVideoPage: React.FC<EditVideoPageProps> = ({
             <h2 className="text-xl font-semibold text-white">
               Generation Settings
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label
                   htmlFor="variations"
@@ -308,6 +315,40 @@ export const EditVideoPage: React.FC<EditVideoPageProps> = ({
                         : 'text-gray-300 hover:bg-gray-600'
                     }`}>
                     Long
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Aspect Ratio
+                </label>
+                <div className="flex rounded-lg bg-gray-700 p-1">
+                  <button
+                    onClick={() => setAspectRatio('16:9')}
+                    className={`w-full px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                      aspectRatio === '16:9'
+                        ? 'bg-purple-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-600'
+                    }`}>
+                    16:9
+                  </button>
+                  <button
+                    onClick={() => setAspectRatio('9:16')}
+                    className={`w-full px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                      aspectRatio === '9:16'
+                        ? 'bg-purple-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-600'
+                    }`}>
+                    9:16
+                  </button>
+                  <button
+                    onClick={() => setAspectRatio('1:1')}
+                    className={`w-full px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                      aspectRatio === '1:1'
+                        ? 'bg-purple-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-600'
+                    }`}>
+                    1:1
                   </button>
                 </div>
               </div>
